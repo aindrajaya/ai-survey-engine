@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Dialog,
@@ -13,10 +13,41 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
+import { generateSurveyForm } from "@/actions/generateSurveyForm";
+import { useFormState, useFormStatus } from "react-dom";
+import { string } from "zod";
+import { stat } from "fs";
+
 type Props = {};
+
+const initialState: {
+  message: string;
+  data?: any;
+} = {
+  message: "",
+};
+
+export function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? "Generating..." : "Generate"}
+    </Button>
+  );
+}
 
 const SurveyGenerator = (props: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [state, formAction] = useFormState(generateSurveyForm, initialState);
+
+  useEffect(() => {
+    if (state.message === "success") {
+      setDialogOpen(false);
+    }
+
+    console.log(state);
+  }, [state.message]);
 
   const onFormCreate = () => {
     setDialogOpen(true);
@@ -28,20 +59,22 @@ const SurveyGenerator = (props: Props) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Survey</DialogTitle>
-          <form>
-            <div className="grid gap-4 py-4">
-              <Textarea
-                id="description"
-                name="description"
-                required
-                placeholder="Share what your servey is about, who is for, and what information you would like to collect. And AI will do the magic"
-              />
-            </div>
-          </form>
         </DialogHeader>
-        <DialogFooter>
-          <Button variant="link">Create Manually</Button>
-        </DialogFooter>
+        <form action={formAction}>
+          <div className="grid gap-4 py-4">
+            <Textarea
+              id="description"
+              name="description"
+              required
+              placeholder="Share what your servey is about, who is for, and what information you would like to collect. And AI will do the magic"
+            />
+          </div>
+
+          <DialogFooter>
+            <SubmitButton />
+            <Button variant="link">Create Manually</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
