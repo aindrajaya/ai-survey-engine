@@ -30,7 +30,16 @@ const Header = async (props: Props) => {
           <h1>AI Survey Builder</h1>
           <div>
             {session?.user ? (
-              <div>
+              <div className="flex items-center gap-4">
+                {session.user.name && session.user.image && (
+                  <Image
+                    src={session.user.image}
+                    alt={session.user.name}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                )}
                 <SignOut />
               </div>
             ) : (
