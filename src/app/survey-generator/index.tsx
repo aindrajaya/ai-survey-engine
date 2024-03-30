@@ -15,7 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { generateSurveyForm } from "@/actions/generateSurveyForm";
 import { useFormState, useFormStatus } from "react-dom";
-import { string } from "zod";
+
+import { useSession, signIn } from "next-auth/react";
 
 type Props = {};
 
@@ -39,17 +40,23 @@ export function SubmitButton() {
 const SurveyGenerator = (props: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [state, formAction] = useFormState(generateSurveyForm, initialState);
+  const session = useSession();
+  console.log(session);
 
   useEffect(() => {
     if (state.message === "success") {
       setDialogOpen(false);
     }
 
-    console.log(state);
+    // console.log(state);
   }, [state.message]);
 
   const onFormCreate = () => {
-    setDialogOpen(true);
+    if (session.data?.user) {
+      setDialogOpen(true);
+    } else {
+      signIn();
+    }
   };
 
   return (
