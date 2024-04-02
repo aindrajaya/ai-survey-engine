@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { forms } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
+import Form from "../../Form";
 
 const page = async ({ params }: { params: { formId: string } }) => {
   const formId = params.formId;
@@ -24,14 +25,15 @@ const page = async ({ params }: { params: { formId: string } }) => {
     },
   });
 
-  console.log(form);
-  console.log("session: ", session);
-
   if (userId !== form?.userId) {
     return <div>You are not authorized to view this page</div>;
   }
 
-  return <div>{formId}</div>;
+  if (!form) {
+    return <div>Form not found</div>;
+  }
+
+  return <Form form={form} />;
 };
 
 export default page;
