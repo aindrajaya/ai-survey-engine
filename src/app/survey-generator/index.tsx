@@ -17,6 +17,7 @@ import { generateSurveyForm } from "@/actions/generateSurveyForm";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { useSession, signIn } from "next-auth/react";
+import { navigate } from "../actions/navigateToForm";
 
 type Props = {};
 
@@ -41,11 +42,11 @@ const SurveyGenerator = (props: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [state, formAction] = useFormState(generateSurveyForm, initialState);
   const session = useSession();
-  console.log(session);
 
   useEffect(() => {
     if (state.message === "success") {
       setDialogOpen(false);
+      navigate(state.data.formId);
     }
 
     // console.log(state);
