@@ -16,10 +16,15 @@ import {
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import FormField from "./FormField";
+import { publishForm } from "../actions/mutateForm";
 
 type Props = {
   form: Form;
   editMode?: boolean;
+};
+
+type QuestionWithOptionsModel = QueastionSelectModel & {
+  fieldOptions: Array<FieldOptionsSelectModel>;
 };
 
 interface Form extends FormSelectModel {
@@ -32,9 +37,14 @@ interface Form extends FormSelectModel {
 
 const Form = (props: Props) => {
   const form = useForm();
+  const { editMode } = props;
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = async (data: any) => {
     console.log(data);
+
+    if (editMode) {
+      await publishForm(props.form.id);
+    }
   };
 
   return (
@@ -47,7 +57,7 @@ const Form = (props: Props) => {
           className="grid w-full max-w-3xl items-center gap-6 m-4 text-left"
         >
           {props.form.questions.map(
-            (question: QueastionSelectModel, index: number) => (
+            (question: QuestionWithOptionsModel, index: number) => (
               <ShadcnFormField
                 control={form.control}
                 name={`question_${question.id}`}
@@ -70,7 +80,7 @@ const Form = (props: Props) => {
               />
             )
           )}
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{editMode ? "Publish" : "Submit"}</Button>
         </form>
       </FormComponent>
     </div>
