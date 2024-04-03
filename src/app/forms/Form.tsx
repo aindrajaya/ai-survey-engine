@@ -15,9 +15,11 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import FormField from "./FormField";
 
 type Props = {
   form: Form;
+  editMode?: boolean;
 };
 
 interface Form extends FormSelectModel {
@@ -55,7 +57,14 @@ const Form = (props: Props) => {
                     <FormLabel className="text-base mt-3">
                       {index + 1}. {question.text}
                     </FormLabel>
-                    <FormControl></FormControl>
+                    <FormControl>
+                      <FormField
+                        element={question}
+                        key={index}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />
