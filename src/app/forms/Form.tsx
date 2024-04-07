@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import FormField from "./FormField";
 import { publishForm } from "../actions/mutateForm";
 import FormPublishSuccess from "./FormPublishSuccess";
+import { text } from "stream/consumers";
 
 type Props = {
   form: Form;
@@ -47,11 +48,32 @@ const Form = (props: Props) => {
   };
 
   const onSubmit = async (data: any) => {
-    console.log(data);
+    console.log({ data });
 
     if (editMode) {
       await publishForm(props.form.id);
       setSuccessDialogOpen(true);
+    } else {
+      // save to db
+      let answers = [];
+
+      for (const [questionId, value] of Object.entries(data)) {
+        const id = parseInt(questionId.replace("question_", ""));
+
+        let fieldOptionsId = null;
+        let textValue = null;
+        if (typeof value === "string" && value.includes("answerId_")) {
+          fieldOptionsId = parseInt(value.replace("answerId_", ""));
+        } else {
+          textValue = value;
+        }
+
+        answers.push({
+          questionId: id,
+          fieldOptionsId,
+          value: textValue,
+        });
+      }
     }
   };
 
@@ -62,31 +84,34 @@ const Form = (props: Props) => {
       <FormComponent {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid w-full max-w-3xl items-center gap-6 m-4 text-left"
+          className="grid w-full max-w-3xl items-center gap-6 my-4 text-left"
         >
           {props.form.questions.map(
-            (question: QuestionWithOptionsModel, index: number) => (
-              <ShadcnFormField
-                control={form.control}
-                name={`question_${question.id}`}
-                key={`${question.text}_${index}`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base mt-3">
-                      {index + 1}. {question.text}
-                    </FormLabel>
-                    <FormControl>
-                      <FormField
-                        element={question}
-                        key={index}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )
+            (question: QuestionWithOptionsModel, index: number) => {
+              return (
+                <ShadcnFormField
+                  control={form.control}
+                  name={`question_${question.id}`}
+                  key={`${question.text}_${index}`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base mt-3">
+                        {index + 1}. {question.text}
+                      </FormLabel>
+
+                      <FormControl>
+                        <FormField
+                          element={question}
+                          key={index}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              );
+            }
           )}
           <Button type="submit">{editMode ? "Publish" : "Submit"}</Button>
         </form>

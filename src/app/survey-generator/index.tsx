@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
 
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -63,6 +63,7 @@ const SurveyGenerator = (props: Props) => {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <Button onClick={onFormCreate}>Create Survey</Button>
+
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Survey</DialogTitle>

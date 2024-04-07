@@ -31,7 +31,7 @@ const FormField = ({ element, value, onChange }: Props) => {
       <Input type="text" onChange={onChange} placeholder="Your answer here" />
     ),
     Switch: () => <Switch />,
-    Textarea: () => <Textarea placeholder="Your answer here" />,
+    Textarea: () => <Textarea placeholder="Type your answer here." />,
     Select: () => (
       <Select onValueChange={onChange}>
         <SelectTrigger>
