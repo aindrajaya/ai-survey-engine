@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import FormField from "./FormField";
 import { publishForm } from "../actions/mutateForm";
 import FormPublishSuccess from "./FormPublishSuccess";
-import { text } from "stream/consumers";
+import { submitAnswers } from "../actions/submitAnswers";
 
 type Props = {
   form: Form;
@@ -72,6 +72,11 @@ const Form = (props: Props) => {
           questionId: id,
           fieldOptionsId,
           value: textValue,
+        });
+
+        const response = await submitAnswers({
+          formId: props.form.id,
+          answers,
         });
       }
     }

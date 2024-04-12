@@ -7,9 +7,9 @@ interface SubmitAnswersData {
   formId: number;
   answers: {
     questionId: number;
-    value?: string;
-    fieldOptionsId?: number;
-  };
+    value?: string | null;
+    fieldOptionsId?: number | null;
+  }[];
 }
 
 export async function submitAnswers(data: SubmitAnswersData) {
@@ -21,4 +21,20 @@ export async function submitAnswers(data: SubmitAnswersData) {
     .returning({ insertedId: formSubmissions.id });
 
   const [{ insertedId }] = newFormSubmissions;
+
+  await db.transaction(async (tx) => {
+    for (const answer of answers) {
+      await tx
+        .insert(dbAnswers)
+        .values({
+          formSubmissionId: insertedId,
+          ...answer,
+        })
+        .returning({
+          answerId: dbAnswers.id,
+        });
+    }
+  });
+
+  return insertedId;
 }
