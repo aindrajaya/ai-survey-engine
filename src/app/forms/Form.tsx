@@ -18,7 +18,8 @@ import { Button } from "@/components/ui/button";
 import FormField from "./FormField";
 import { publishForm } from "../actions/mutateForm";
 import FormPublishSuccess from "./FormPublishSuccess";
-import { submitAnswers } from "../actions/submitAnswers";
+import { submitAnswers, type Answer } from "../actions/submitAnswers";
+import { useRouter } from "next/navigation";
 
 type Props = {
   form: Form;
@@ -39,6 +40,7 @@ interface Form extends FormSelectModel {
 
 const Form = (props: Props) => {
   const form = useForm();
+  const router = useRouter();
   const { editMode } = props;
 
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
@@ -62,10 +64,11 @@ const Form = (props: Props) => {
 
         let fieldOptionsId = null;
         let textValue = null;
-        if (typeof value === "string" && value.includes("answerId_")) {
+
+        if (typeof value == "string" && value.includes("answerId_")) {
           fieldOptionsId = parseInt(value.replace("answerId_", ""));
         } else {
-          textValue = value;
+          textValue = value as string;
         }
 
         answers.push({
@@ -73,11 +76,19 @@ const Form = (props: Props) => {
           fieldOptionsId,
           value: textValue,
         });
+      }
 
+      try {
         const response = await submitAnswers({
           formId: props.form.id,
           answers,
         });
+
+        if (response) {
+          router.push("/forms/submit-success");
+        }
+      } catch (error) {
+        alert("An error occurred while submitting the form.");
       }
     }
   };
