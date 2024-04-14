@@ -1,14 +1,13 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   FormSelectModel,
-  QueastionSelectModel,
+  QuestionsSelectModel,
   FieldOptionsSelectModel,
 } from "@/types/form-types";
 import {
   Form as FormComponent,
-  FormField as ShadcnFormField,
+  FormField as ShadcdnFormField,
   FormItem,
   FormLabel,
   FormControl,
@@ -18,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import FormField from "./FormField";
 import { publishForm } from "../actions/mutateForm";
 import FormPublishSuccess from "./FormPublishSuccess";
-import { submitAnswers, type Answer } from "../actions/submitAnswers";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -26,23 +24,18 @@ type Props = {
   editMode?: boolean;
 };
 
-type QuestionWithOptionsModel = QueastionSelectModel & {
+type QuestionWithOptionsModel = QuestionsSelectModel & {
   fieldOptions: Array<FieldOptionsSelectModel>;
 };
 
 interface Form extends FormSelectModel {
-  questions: Array<
-    QueastionSelectModel & {
-      fieldOptions: Array<FieldOptionsSelectModel>;
-    }
-  >;
+  questions: Array<QuestionWithOptionsModel>;
 }
 
 const Form = (props: Props) => {
   const form = useForm();
   const router = useRouter();
   const { editMode } = props;
-
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
   const handleDialogChange = (open: boolean) => {
@@ -50,18 +43,14 @@ const Form = (props: Props) => {
   };
 
   const onSubmit = async (data: any) => {
-    console.log({ data });
-
+    console.log(data);
     if (editMode) {
       await publishForm(props.form.id);
       setSuccessDialogOpen(true);
     } else {
-      // save to db
       let answers = [];
-
       for (const [questionId, value] of Object.entries(data)) {
         const id = parseInt(questionId.replace("question_", ""));
-
         let fieldOptionsId = null;
         let textValue = null;
 
@@ -78,17 +67,22 @@ const Form = (props: Props) => {
         });
       }
 
-      try {
-        const response = await submitAnswers({
-          formId: props.form.id,
-          answers,
-        });
+      const baseUrl =
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-        if (response) {
-          router.push("/forms/submit-success");
-        }
-      } catch (error) {
-        alert("An error occurred while submitting the form.");
+      const response = await fetch(`${baseUrl}/api/form/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ formId: props.form.id, answers }),
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        router.push(`/forms/${props.form.id}/success`);
+      } else {
+        console.error("Error submitting form");
+        alert("Error submitting form. Please try again later");
       }
     }
   };
@@ -105,7 +99,7 @@ const Form = (props: Props) => {
           {props.form.questions.map(
             (question: QuestionWithOptionsModel, index: number) => {
               return (
-                <ShadcnFormField
+                <ShadcdnFormField
                   control={form.control}
                   name={`question_${question.id}`}
                   key={`${question.text}_${index}`}
@@ -114,7 +108,6 @@ const Form = (props: Props) => {
                       <FormLabel className="text-base mt-3">
                         {index + 1}. {question.text}
                       </FormLabel>
-
                       <FormControl>
                         <FormField
                           element={question}

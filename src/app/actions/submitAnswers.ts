@@ -39,7 +39,7 @@ export async function submitAnswers(data: SubmitAnswersData) {
       }
     });
 
-    console.log(insertedId);
+    console.log("submitAnswers: ", insertedId);
     return insertedId;
   } catch (error) {
     console.error(error);
