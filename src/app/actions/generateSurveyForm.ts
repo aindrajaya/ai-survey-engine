@@ -44,7 +44,7 @@ export async function generateSurveyForm(
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY} || "sk-1234567890"`,
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ""}`,
       },
       method: "POST",
       body: JSON.stringify({
@@ -52,7 +52,7 @@ export async function generateSurveyForm(
         messages: [
           {
             role: "system",
-            content: `${data.description} ${promptExplanation}`,
+            content: `Jawablah dalam bahasa Indonesia. ${data.description} ${promptExplanation}`,
           },
         ],
       }),
