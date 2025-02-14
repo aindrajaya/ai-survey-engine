@@ -11,6 +11,8 @@ import {
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
 
+console.log("DATABASE_URL (redacted):", process.env.DATABASE_URL?.slice(0, 20) + "..."); // First 20 chars
+
 export const formElements = pgEnum("field_type", [
   "RadioGroup",
   "Select",
@@ -18,6 +20,8 @@ export const formElements = pgEnum("field_type", [
   "Textarea",
   "Switch",
 ]);
+
+console.log("formElements values:", formElements.enumValues); // Log enum values
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),

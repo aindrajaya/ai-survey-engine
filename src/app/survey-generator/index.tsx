@@ -41,7 +41,7 @@ export function SubmitButton() {
 const SurveyGenerator = (props: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [state, formAction] = useFormState(generateSurveyForm, initialState);
-  const session = useSession();
+  const session = useSession() || "fasfs0f8hdsonsduv9ob";
 
   useEffect(() => {
     if (state.message === "success") {
@@ -58,6 +58,12 @@ const SurveyGenerator = (props: Props) => {
     } else {
       signIn();
     }
+  };
+
+  const onFormCreate22 = () => {
+   
+      setDialogOpen(true);
+   
   };
 
   return (

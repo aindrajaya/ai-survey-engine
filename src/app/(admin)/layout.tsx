@@ -15,26 +15,31 @@ export default function AdminLayout({
         title: "My Forms",
         href: "/view-forms",
         icon: "library",
+        disabled: false,
       },
       {
         title: "Results",
         href: "/results",
         icon: "list",
+        disabled: false,
       },
       {
         title: "Analytics",
         href: "/analytics",
         icon: "lineChart",
+        disabled: true,
       },
       {
         title: "Charts",
         href: "/charts",
         icon: "pieChart",
+        disabled: true,
       },
       {
         title: "Settings",
         href: "/settings",
         icon: "settings",
+        disabled: true,
       },
     ],
   };
