@@ -11,12 +11,13 @@ import { FormControl, FormLabel } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { QueastionSelectModel } from "@/types/form-types";
+import { QuestionsSelectModel } from "@/types/form-types";
+
 import { FieldOptionsSelectModel } from "@/types/form-types";
 import { Label } from "@/components/ui/label";
 
 type Props = {
-  element: QueastionSelectModel & {
+  element: QuestionsSelectModel & {
     fieldOptions: Array<FieldOptionsSelectModel>;
   };
   value: string;
