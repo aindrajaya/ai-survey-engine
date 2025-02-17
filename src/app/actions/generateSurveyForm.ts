@@ -52,7 +52,7 @@ export async function generateSurveyForm(
         messages: [
           {
             role: "system",
-            content: `Jawablah dalam bahasa Indonesia. ${data.description} ${promptExplanation}`,
+            content: `${data.description} ${promptExplanation}`,
           },
         ],
       }),
