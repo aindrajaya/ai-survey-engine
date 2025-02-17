@@ -26,7 +26,7 @@ const Header = async (props: Props) => {
     <header className="border-b-2">
       <nav className="bg-white border-gray-200 px-4 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          <h1>AI Survey Builder</h1>
+          <h1>LenaSurvey</h1>
           <div>
             {session?.user ? (
               <div className="flex items-center gap-4">
