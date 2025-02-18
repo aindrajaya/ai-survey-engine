@@ -27,13 +27,13 @@ export default function AdminLayout({
         title: "Analytics",
         href: "/analytics",
         icon: "lineChart",
-        disabled: true,
+        disabled: false,
       },
       {
         title: "Charts",
         href: "/charts",
         icon: "pieChart",
-        disabled: true,
+        disabled: false,
       },
       {
         title: "Settings",
