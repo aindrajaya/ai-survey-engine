@@ -43,7 +43,7 @@ const Form = (props: Props) => {
   };
 
   const onSubmit = async (data: any) => {
-    console.log(data);
+    console.log(data, "Data submitted: ");
     if (editMode) {
       await publishForm(props.form.id);
       setSuccessDialogOpen(true);
