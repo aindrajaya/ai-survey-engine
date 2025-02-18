@@ -94,9 +94,7 @@ const Form = (props: Props) => {
   return (
     <div className="text-center">
       <h1 className="text-lg font-bold py-3">{props.form.name}</h1>
-      <button className="mt-4 mb-2 px-4 py-2 bg-orange-500 hover:bg-orange-700 text-white font-bold rounded" onClick={goback}>
-        Back to Home
-      </button>
+      <Button onClick={goback}>{"Back to Home" }</Button>
       <h3 className="text-md">{props.form.description}</h3>
       
       <FormComponent {...form}>
